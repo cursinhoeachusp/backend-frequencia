@@ -1,0 +1,27 @@
+{
+  "name": "backend-frequencia",
+  "version": "1.0.0",
+  "description": "Repositório responsável pela API do Sistema de Coleta de Frequência do Cursinho Popular EACH (CPE). Este sistema integra a carteirinha virtual dos alunos ao banco de dados para automatizar o controle de presença e monitorar indicadores de evasão.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cursinhoeachusp/backend-frequencia.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/cursinhoeachusp/backend-frequencia/issues"
+  },
+  "homepage": "https://github.com/cursinhoeachusp/backend-frequencia#readme",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1"
+  }
+}
