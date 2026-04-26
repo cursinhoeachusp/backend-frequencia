@@ -24,7 +24,7 @@ Repositório responsável pela API do Sistema de Coleta de Frequência do Cursin
 
 ### 1. Clone o repositório
 ```bash
-git clone https://github.com/inovatec-each/backend-frequencia.git
+git clone https://github.com/cursinhoeachusp/backend-frequencia
 cd backend-frequencia
 ```
 
