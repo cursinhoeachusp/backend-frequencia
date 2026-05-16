@@ -1,14 +1,18 @@
 const express = require("express");
 const cors = require("cors");
 
+const pool = require("./db.js"); // se conecta ao neondb
+
+
+
 const app = express();
 app.use(cors());
 app.use(express.json()); // permite receber dados em JSON
 
 const PORT = process.env.PORT || 3000;
 
-// rota para registrar presença por qr code ou manualmente
 
+// rota para registrar presença por qr code ou manualmente
 app.post("/api/presenca", (req, res) => {
   const { matricula, origem } = req.body;
 
