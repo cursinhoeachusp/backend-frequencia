@@ -21,15 +21,6 @@ Repositório responsável pela API REST do Sistema de Coleta de Frequência do C
 
 ---
 
-## Regras de Negócio Implementadas
-
-* **Timezone Fixo:** Toda a manipulação de datas da API força o fuso horário `America/Sao_Paulo`, garantindo que registros noturnos não saltem de dia devido ao fuso UTC do servidor em nuvem.
-* **Semana Letiva Acadêmica:** O cálculo de faltas semanais foi adaptado para iniciar estritamente na **Segunda-feira** (alinhado ao calendário do cursinho), sobrepondo o comportamento padrão americano que inicia no Domingo.
-* **Consistência de Dados (Transações):** A aprovação de uma justificativa de falta altera atomicamente o status do atestado e modifica o histórico de presenças do respectivo dia de `'F'` (Falta) para `'J'` (Justificada) usando blocos `BEGIN/COMMIT`.
-* **Tratamento de Matrícula:** Ao marcar um aluno como 'Regular', o campo `data_evasao` é resetado para `NULL`. Ao marcar como 'Evadido', grava-se automaticamente a data atual do servidor.
-
----
-
 ## Como rodar o projeto localmente
 
 ### 1. Clone o repositório
