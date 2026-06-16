@@ -21,6 +21,7 @@
   "homepage": "https://github.com/cursinhoeachusp/backend-frequencia#readme",
   "dependencies": {
     "cors": "^2.8.6",
+    "dayjs": "^1.11.21",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "pg": "^8.20.0"
