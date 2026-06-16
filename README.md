@@ -25,7 +25,7 @@ Repositório responsável pela API REST do Sistema de Coleta de Frequência do C
 
 ### 1. Clone o repositório
 ```bash
-git clone [https://github.com/cursinhoeachusp/backend-frequencia](https://github.com/cursinhoeachusp/backend-frequencia)
+git clone https://github.com/cursinhoeachusp/backend-frequencia
 cd backend-frequencia
 ```
 
