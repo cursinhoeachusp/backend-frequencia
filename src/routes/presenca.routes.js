@@ -2,6 +2,14 @@ const express = require("express");
 const router = express.Router();
 const pool = require("../../db.js");
 
+const dayjs = require("dayjs");
+const utc = require("dayjs/plugin/utc");
+const timezone = require("dayjs/plugin/timezone");
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault("America/Sao_Paulo");
+
 router.post("/presenca", async (req, res) => {
   const { ra, origem } = req.body;
   
@@ -20,11 +28,13 @@ router.post("/presenca", async (req, res) => {
 
     const aluno = resultBusca.rows[0];
 
+    const dataHojeBR = dayjs().tz("America/Sao_Paulo").format("YYYY-MM-DD");
+
     const queryInsert = `
       INSERT INTO public.presencas (id_aluno, data_aula, status_presenca)
-      VALUES ($1, CURRENT_DATE, 'P');
+      VALUES ($1, $2, 'P');
     `;
-    await pool.query(queryInsert, [aluno.id]);
+    await pool.query(queryInsert, [aluno.id, dataHojeBR]);
 
     return res.status(200).json({
       sucesso: true,

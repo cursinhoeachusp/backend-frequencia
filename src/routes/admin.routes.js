@@ -2,7 +2,17 @@ const express = require("express");
 const router = express.Router();
 const pool = require("../../db.js");
 
-// GET /api/admin/alunos - Lista frequência geral e cálculos (Com JOIN no auth.users)
+const dayjs = require("dayjs");
+const isSameOrAfter = require("dayjs/plugin/isSameOrAfter");
+const utc = require("dayjs/plugin/utc");
+const timezone = require("dayjs/plugin/timezone");
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.extend(isSameOrAfter);
+
+dayjs.tz.setDefault("America/Sao_Paulo");
+
 router.get("/alunos", async (req, res) => {
   try {
     const queryAlunos = `
@@ -22,6 +32,8 @@ router.get("/alunos", async (req, res) => {
       ORDER BY data_aula ASC;
     `;
     const { rows: todasPresencas } = await pool.query(queryPresencas);
+
+    const inicioDaSemana = dayjs().tz("America/Sao_Paulo").startOf("week").add(1, "day");
 
     const resultadoFinal = alunos.map(aluno => {
       const historico = todasPresencas.filter(p => p.id_aluno === aluno.id);
@@ -43,12 +55,10 @@ router.get("/alunos", async (req, res) => {
         }
       }
 
-      const hoje = new Date();
-      const primeiroDiaDaSemana = new Date(hoje.setDate(hoje.getDate() - hoje.getDay()));
-      const faltasNaSemana = historico.filter((registro) => {
+        const faltasNaSemana = historico.filter((registro) => {
         const dataRegistro = new Date(registro.data_aula);
         const ehFalta = registro.status === 'F';
-        const ehDestaSemana = dataRegistro >= primeiroDiaDaSemana;
+        const ehDestaSemana = dayjs(registro.data_aula).tz("America/Sao_Paulo").isSameOrAfter(inicioDaSemana);
         return ehFalta && ehDestaSemana;
       }).length;
 
@@ -60,7 +70,7 @@ router.get("/alunos", async (req, res) => {
         faltasConsecutivas,
         faltasNaSemana,
         historico: historico.map(h => ({ 
-          dia: new Date(h.data_aula).getDate(), 
+          dia: dayjs(h.data_aula).date(), 
           status: h.status 
         }))
       };
@@ -95,7 +105,7 @@ router.get("/justificativas", async (req, res) => {
       id: r.id,
       ra: r.ra,
       nome: r.nome,
-      dataFalta: new Date(r.data_aula).toLocaleDateString("pt-BR"),
+      dataFalta: dayjs(r.data_aula).format("DD/MM/YYYY"),
       motivo: r.motivo,
       statusAnalise: r.status_analise
     }));
@@ -149,7 +159,8 @@ router.patch("/aluno/:ra", async (req, res) => {
     if (status === 'Regular') {
       dataEvasaoDefinicao = "NULL";
     } else if (status === 'Evadido') {
-      dataEvasaoDefinicao = "CURRENT_DATE";
+      dataEvasaoDefinicao = "$3";
+      params.push(dayjs().tz("America/Sao_Paulo").format("YYYY-MM-DD"));
     }
 
     const queryUpdate = `
