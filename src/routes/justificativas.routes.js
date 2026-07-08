@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const pool = require("../../db.js");
+const pool = require("../db.js");
 
 const dayjs = require("dayjs");
 const isSameOrAfter = require("dayjs/plugin/isSameOrAfter");
@@ -31,13 +31,13 @@ router.get("/", async (req, res) => {
     `;
     const { rows } = await pool.query(query);
 
-    const response = rows.map(r => ({
+    const response = rows.map((r) => ({
       id: r.id,
       ra: r.ra,
       nome: r.nome,
       dataFalta: dayjs(r.data_aula).format("DD/MM/YYYY"),
       motivo: r.motivo,
-      statusAnalise: r.status_analise
+      statusAnalise: r.status_analise,
     }));
 
     res.status(200).json(response);
@@ -49,10 +49,10 @@ router.get("/", async (req, res) => {
 
 router.patch("/:id/status", async (req, res) => {
   const { id } = req.params;
-  const { statusAnalise } = req.body; 
+  const { statusAnalise } = req.body;
 
   try {
-    await pool.query('BEGIN');
+    await pool.query("BEGIN");
 
     const queryJustificativa = `
       UPDATE public.justificativas 
@@ -60,20 +60,28 @@ router.patch("/:id/status", async (req, res) => {
       WHERE id = $2 
       RETURNING id_presenca;
     `;
-    const resultJustificativa = await pool.query(queryJustificativa, [statusAnalise, id]);
+    const resultJustificativa = await pool.query(queryJustificativa, [
+      statusAnalise,
+      id,
+    ]);
 
-    if (statusAnalise === 'Aprovada' && resultJustificativa.rows.length > 0) {
+    if (statusAnalise === "Aprovada" && resultJustificativa.rows.length > 0) {
       const idPresenca = resultJustificativa.rows[0].id_presenca;
       await pool.query(
-        `UPDATE public.presencas SET status_presenca = 'J' WHERE id = $1`, 
-        [idPresenca]
+        `UPDATE public.presencas SET status_presenca = 'J' WHERE id = $1`,
+        [idPresenca],
       );
     }
 
-    await pool.query('COMMIT');
-    res.status(200).json({ sucesso: true, mensagem: "Justificativa processada com sucesso." });
+    await pool.query("COMMIT");
+    res
+      .status(200)
+      .json({
+        sucesso: true,
+        mensagem: "Justificativa processada com sucesso.",
+      });
   } catch (error) {
-    await pool.query('ROLLBACK');
+    await pool.query("ROLLBACK");
     console.error("Erro ao aprovar justificativa:", error);
     res.status(500).json({ erro: "Falha ao processar justificativa" });
   }

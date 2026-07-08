@@ -2,10 +2,10 @@ const express = require("express");
 const cors = require("cors");
 
 
-const alunosRoutes = require("./src/routes/alunos.routes.js");
-const estatisticasRoutes = require("./src/routes/estatisticas.routes.js");
-const frequenciasRoutes = require("./src/routes/frequencias.routes.js");
-const justificativasRoutes = require("./src/routes/justificativas.routes.js");
+const alunosRoutes = require("./routes/alunos.routes.js");
+const estatisticasRoutes = require("./routes/estatisticas.routes.js");
+const frequenciasRoutes = require("./routes/frequencias.routes.js");
+const justificativasRoutes = require("./routes/justificativas.routes.js");
 
 const app = express();
 

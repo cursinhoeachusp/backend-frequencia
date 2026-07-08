@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const pool = require("../../db.js");
+const pool = require("../db.js");
 
 const dayjs = require("dayjs");
 const utc = require("dayjs/plugin/utc");
@@ -12,7 +12,7 @@ dayjs.tz.setDefault("America/Sao_Paulo");
 
 router.post("/", async (req, res) => {
   const { ra, origem } = req.body;
-  
+
   try {
     const queryBuscaAluno = `
       SELECT a.id, a.id_user, u.raw_user_meta_data->>'name' AS nome
@@ -23,7 +23,9 @@ router.post("/", async (req, res) => {
     const resultBusca = await pool.query(queryBuscaAluno, [ra]);
 
     if (resultBusca.rows.length === 0) {
-      return res.status(404).json({ erro: "Aluno não encontrado pelo RA informado." });
+      return res
+        .status(404)
+        .json({ erro: "Aluno não encontrado pelo RA informado." });
     }
 
     const aluno = resultBusca.rows[0];
