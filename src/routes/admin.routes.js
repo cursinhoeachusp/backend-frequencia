@@ -119,7 +119,7 @@ router.get("/justificativas", async (req, res) => {
 
 router.patch("/justificativa/:id", async (req, res) => {
   const { id } = req.params;
-  const { aprovacao } = req.body; 
+  const { statusAnalise } = req.body; 
 
   try {
     await pool.query('BEGIN');
@@ -130,9 +130,9 @@ router.patch("/justificativa/:id", async (req, res) => {
       WHERE id = $2 
       RETURNING id_presenca;
     `;
-    const resultJustificativa = await pool.query(queryJustificativa, [aprovacao, id]);
+    const resultJustificativa = await pool.query(queryJustificativa, [statusAnalise, id]);
 
-    if (aprovacao === 'Aprovada' && resultJustificativa.rows.length > 0) {
+    if (statusAnalise === 'Aprovada' && resultJustificativa.rows.length > 0) {
       const idPresenca = resultJustificativa.rows[0].id_presenca;
       await pool.query(
         `UPDATE public.presencas SET status_presenca = 'J' WHERE id = $1`, 
