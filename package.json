@@ -4,7 +4,8 @@
   "description": "Repositório responsável pela API do Sistema de Coleta de Frequência do Cursinho Popular EACH (CPE). Este sistema integra a carteirinha virtual dos alunos ao banco de dados para automatizar o controle de presença e monitorar indicadores de evasão.",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "vitest",
+    "test:watch": "vitest",
     "start": "node server.js"
   },
   "repository": {
@@ -25,5 +26,9 @@
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "pg": "^8.20.0"
+  },
+  "devDependencies": {
+    "supertest": "^7.2.2",
+    "vitest": "^4.1.10"
   }
 }
